@@ -1,6 +1,7 @@
 # SST-Sal: A spherical spatio-temporal approach for saliency prediction in 360º videos
 
 Code and models for *“SST-Sal: A spherical spatio-temporal approach for saliency prediction in 360º videos”* ([PDF](https://graphics.unizar.es/papers/2022_Bernal_SSTSal.pdf))
+
 Edurne Bernal, Daniel Martín, Diego Gutierrez, and Belen Masia.
 **Computers & Graphics**
 
