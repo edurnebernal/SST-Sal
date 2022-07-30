@@ -53,3 +53,19 @@ Then run `inference.py` to obtain the saliency predictions
 ```
 python inference.py
 ```
+
+## Cite
+
+If you use this work, please consider citing our paper with the following Bibtex code:
+```
+@article{BERNALBERDUN2022200,
+title = {SST-Sal: A spherical spatio-temporal approach for saliency prediction in 360$^{\circ}$ videos},
+author = {Edurne Bernal-Berdun and Daniel Martin and Diego Gutierrez and Belen Masia}
+journal = {Computers & Graphics},
+volume = {106},
+pages = {200-209},
+year = {2022},
+issn = {0097-8493},
+doi = {https://doi.org/10.1016/j.cag.2022.06.002},
+}
+```
