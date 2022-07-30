@@ -42,6 +42,7 @@ Once you have the extracted frames and the associated optical flow estimations, 
 ```
 python inference.py 
 ```
+__Note: To extract the optic flow with RAFT, we recommend using the highest quality image possible (e.g., 2048x1080), and the `raft-sintel.pth` model to obtain the best result.
 ### SST-Sal without optical flow estimations
 If you do not have the optical flow estimations of your videos, you can try our less accurate alternative of SST-Sal. Modify the inference parameters and data loader sections in `config.py`, and use:
 
