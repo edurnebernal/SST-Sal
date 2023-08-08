@@ -77,9 +77,9 @@ def save_video(frames_dir, pred_dir, gt_dir, output_vid_name = 'SST-Sal_pred.avi
     :param gt: list of ground truth saliency maps
     """
 
-    out_pred = cv2.VideoWriter(os.path.join( config.results_dir, output_vid_name), cv2.VideoWriter_fourcc(*'DIVX'), 4, (1024, 540))
+    out_pred = cv2.VideoWriter(os.path.join( config.results_dir, output_vid_name), cv2.VideoWriter_fourcc(*'DIVX'), 8, (1024, 540))
     if not gt_dir is None:
-        out_gt = cv2.VideoWriter(os.path.join( config.results_dir, 'gt.avi'), cv2.VideoWriter_fourcc(*'DIVX'), 4, (1024, 540))
+        out_gt = cv2.VideoWriter(os.path.join( config.results_dir, 'gt.avi'), cv2.VideoWriter_fourcc(*'DIVX'), 8, (1024, 540))
 
     video_frames_names = os.listdir(pred_dir)
     video_frames_names = sorted(video_frames_names, key=lambda x: int((x.split(".")[0]).split("_")[1]))
