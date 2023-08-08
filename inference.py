@@ -55,9 +55,9 @@ if __name__ == "__main__":
 
     # Load the data. Use the appropiate data loader depending on the expected input data
     if config.of_available:
-        test_video360_dataset = RGB_and_OF(inference_frames_folder, config.optical_flow_dir, None, video_test_names, config.sequence_length, split='test', load_names=True)
+        test_video360_dataset = RGB_and_OF(inference_frames_folder, config.optical_flow_dir, None, video_test_names, config.sequence_length, split='test', load_names=True, inference=True)
     else:
-        test_video360_dataset = RGB(inference_frames_folder, None, video_test_names, config.sequence_length, split='test', load_names=True)
+        test_video360_dataset = RGB(inference_frames_folder, None, video_test_names, config.sequence_length, split='test', load_names=True, inference=True)
 
     test_data = DataLoader(test_video360_dataset, batch_size=config.batch_size, shuffle=False)
 
