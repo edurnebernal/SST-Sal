@@ -9,7 +9,7 @@ from tqdm import tqdm
 
 
 class RGB_and_OF(Dataset):
-    def __init__(self, path_to_frames, path_to_flow_maps, path_to_saliency_maps, video_names, frames_per_data=20, split_percentage=0.2, split='train', resolution = [240, 320], skip=20, load_names=False, transform=False):
+    def __init__(self, path_to_frames, path_to_flow_maps, path_to_saliency_maps, video_names, frames_per_data=20, split_percentage=0.2, split='train', resolution = [240, 320], skip=20, load_names=False, transform=False, inference=False):
         self.sequences = []
         self.correspondent_sal_maps = []
         self.frames_per_data = frames_per_data
@@ -30,7 +30,6 @@ class RGB_and_OF(Dataset):
         for name in video_names:
             video_frames_names = os.listdir(os.path.join(self.path_frames, name))
             video_frames_names = sorted(video_frames_names, key=lambda x: int((x.split(".")[0]).split("_")[1]))
-
             # Frame number and saliency name must be the same (ex. frame name: 0001_0023.png, saliency map: 0023.png)
 
             # Skip the first frames to avoid biases due to the eye-tracking capture procedure 
@@ -38,20 +37,30 @@ class RGB_and_OF(Dataset):
             sts = skip
 
             # Split the videos in sequences of equal lenght
-            for end in range(skip + frames_per_data, len(video_frames_names), frames_per_data):
-
+            initial_frame = frames_per_data + skip
+            
+            if inference:
+                frames_per_data = frames_per_data - 4
+                
+            for end in range(initial_frame, len(video_frames_names), frames_per_data):
                 # Check if exist the ground truth saliency map for all the frames in the sequence
                 valid_sequence = True
 
                 if not self.path_sal_maps is None:
 
                     for frame in video_frames_names[sts:end]:
-                        if not os.path.exists(os.path.join(self.path_sal_maps, frame.split("_")[0], frame.split("_")[1])):
+                        # if not os.path.exists(os.path.join(self.path_sal_maps, frame.split("_")[0], frame.split("_")[1])) or not os.path.exists(os.path.join(self.flow_maps, frame.split("_")[0], frame.split("_")[1])):
+                        if not os.path.exists(os.path.join(self.flow_maps, frame.split("_")[0], frame)):
+                            print(os.path.join(self.flow_maps, frame.split("_")[0], frame.split("_")[1]))
+
                             valid_sequence = False
+                            print("Saliency map not found for frame: " + frame)
                             break
                 
                 if valid_sequence: self.sequences.append(video_frames_names[sts:end])
+            
                 sts = end
+                if inference: sts = sts - 4 # To overlap sequences while inference for smooth predictions (4 frames) 
 
     
     def __len__(self):
@@ -94,6 +103,8 @@ class RGB_and_OF(Dataset):
                 
 
                 saliency_img = cv2.imread(sal_map_path, cv2.IMREAD_GRAYSCALE)
+                # Assert if the saliency map could not be read
+                assert saliency_img is not None, 'Saliency map could not be read in path: ' + sal_map_path
                 if saliency_img.shape[1] != self.resolution[1] or saliency_img.shape[0] != self.resolution[0]:  
                     saliency_img = cv2.resize(saliency_img, (self.resolution[1], self.resolution[0]),
                                                 interpolation=cv2.INTER_AREA)
@@ -136,7 +147,7 @@ class RGB_and_OF(Dataset):
         return sample
 
 class RGB(Dataset):
-    def __init__(self, path_to_frames,path_to_saliency_maps, video_names, frames_per_data=20, split_percentage=0.2, split='train', resolution = [240, 320], skip=20, load_names=False, transform=False):
+    def __init__(self, path_to_frames,path_to_saliency_maps, video_names, frames_per_data=20, split_percentage=0.2, split='train', resolution = [240, 320], skip=20, load_names=False, transform=False, inference=False):
         self.sequences = []
         self.correspondent_sal_maps = []
         self.frames_per_data = frames_per_data
@@ -166,7 +177,13 @@ class RGB(Dataset):
             sts = skip
 
             # Split the videos in sequences of equal lenght
-            for end in range(skip + frames_per_data, len(video_frames_names), frames_per_data):
+            initial_frame = frames_per_data + skip
+            
+            if inference:
+                frames_per_data = frames_per_data - 4
+
+            # Split the videos in sequences of equal lenght
+            for end in range(initial_frame, len(video_frames_names), frames_per_data):
 
                 # Check if exist the ground truth saliency map for all the frames in the sequence
                 valid_sequence = True
@@ -180,6 +197,7 @@ class RGB(Dataset):
                 
                 if valid_sequence: self.sequences.append(video_frames_names[sts:end])
                 sts = end
+                if inference: sts = sts - 4 # To overlap sequences while inference for smooth predictions (4 frames) 
                     
 
     def __len__(self):
