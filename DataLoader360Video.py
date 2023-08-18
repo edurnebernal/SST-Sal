@@ -37,10 +37,10 @@ class RGB_and_OF(Dataset):
             sts = skip
 
             # Split the videos in sequences of equal lenght
-            initial_frame = frames_per_data + skip
+            initial_frame = self.frames_per_data + skip
             
             if inference:
-                frames_per_data = frames_per_data - 4
+                frames_per_data = self.frames_per_data - 4
                 
             for end in range(initial_frame, len(video_frames_names), frames_per_data):
                 # Check if exist the ground truth saliency map for all the frames in the sequence
@@ -177,10 +177,10 @@ class RGB(Dataset):
             sts = skip
 
             # Split the videos in sequences of equal lenght
-            initial_frame = frames_per_data + skip
+            initial_frame = self.frames_per_data + skip
             
             if inference:
-                frames_per_data = frames_per_data - 4
+                frames_per_data = self.frames_per_data - 4
 
             # Split the videos in sequences of equal lenght
             for end in range(initial_frame, len(video_frames_names), frames_per_data):
