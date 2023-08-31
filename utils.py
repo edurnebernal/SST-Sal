@@ -46,7 +46,6 @@ def frames_extraction(path_to_videos):
             success, frame = video.read()
             frame_id = 0
             frame_name = str(v_n).zfill(3) + '_' + str(frame_id).zfill(4) + '.png'
-            frame = cv2.resize(frame, (2048, 1080))
             cv2.imwrite(os.path.join(new_video_folder, frame_name), frame)
             frame_id += 1
 
